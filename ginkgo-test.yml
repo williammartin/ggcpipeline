@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: golang
+    tag: "latest"
+
+inputs:
+- name: ggcpipeline-repo
+- name: ginkgo-repo
+  path: gopath/src/github.com/onsi/ginkgo
+
+run:
+  path: ggcpipeline-repo/ginkgo-test.sh

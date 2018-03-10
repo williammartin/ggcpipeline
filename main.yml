@@ -1,0 +1,37 @@
+groups:
+- name: periodic
+  jobs:
+  - ginkgo
+
+jobs:
+- name: ginkgo
+  max_in_flight: 1
+  public: true
+  plan:
+  - do:
+    - get: time-15m
+      trigger: true
+    - get: ginkgo-repo
+      trigger: true
+    - get: ggcpipeline-repo
+      trigger: true
+    - task: test
+      file: ggcpipeline-repo/ginkgo-test.yml
+
+resources:
+- name: ginkgo-repo
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/onsi/ginkgo
+
+- name: ggcpipeline-repo
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/williammartin/ggcpipeline
+
+- name: time-15m
+  type: time
+  source:
+    interval: 15m
