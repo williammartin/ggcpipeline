@@ -2,6 +2,7 @@ groups:
 - name: periodic
   jobs:
   - ginkgo
+  - gomega
 
 jobs:
 - name: ginkgo
@@ -18,12 +19,32 @@ jobs:
     - task: test
       file: ggcpipeline-repo/ginkgo-test.yml
 
+- name: gomega
+  max_in_flight: 1
+  public: true
+  plan:
+  - do:
+    - get: time-15m
+      trigger: true
+    - get: gomega-repo
+      trigger: true
+    - get: ggcpipeline-repo
+      trigger: true
+    - task: test
+      file: ggcpipeline-repo/gomega-test.yml
+
 resources:
 - name: ginkgo-repo
   type: git
   source:
     branch: master
     uri: https://github.com/onsi/ginkgo
+
+- name: gomega-repo
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/onsi/gomega
 
 - name: ggcpipeline-repo
   type: git
